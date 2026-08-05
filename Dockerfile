@@ -19,11 +19,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
 # Not on PyPI — install directly from GitHub, pinned to a commit SHA
 # (ea77d3b = 2026-02-28) for reproducible builds.
 # https://github.com/suhasvemuri/obsidian-self-mcp
-# NOTE: mcp<2.0.0 pin is REQUIRED — MCP SDK 2.0 moved FastMCP out of
-# mcp.server.fastmcp, which breaks obsidian-self-mcp's imports.
+# NOTE: mcp SDK 2.x is REQUIRED here — mcp_server.py contains a FastMCP→
+# MCPServer shim (mcp 2.0 renamed FastMCP and removed mcp.server.fastmcp).
 RUN pip install --no-cache-dir \
     "git+https://github.com/suhasvemuri/obsidian-self-mcp.git@ea77d3b5746b55a19c90d4d6e24e3c694fdfc45e" \
-    "mcp[cli]>=1.0.0,<2.0.0" \
+    "mcp[cli]>=2.0.0,<3.0.0" \
     cryptography \
     uvicorn
 
