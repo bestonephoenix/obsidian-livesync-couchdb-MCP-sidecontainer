@@ -201,7 +201,7 @@ If you currently run `bestonephoenix/docker-obsidian-livesync-couchdb-mcp` (sing
 |---|---|
 | CouchDB configuration | [oleduc/docker-obsidian-livesync-couchdb](https://github.com/oleduc/docker-obsidian-livesync-couchdb) |
 | MCP tools | [suhasvemuri/obsidian-self-mcp](https://github.com/suhasvemuri/obsidian-self-mcp) |
-| Encryption | Python reimplementation of [vrtmrz/octagonal-wheels](https://github.com/vrtmrz/octagonal-wheels) HKDF scheme |
+| Encryption | Python reimplementation of [vrtmrz/octagonal-wheels](https://github.com/vrtmrz/fancy-kit/tree/main/packages/octagonal-wheels) HKDF scheme |
 
 ## License
 
