@@ -1,0 +1,22 @@
+# Environment
+.env
+.env.*
+
+# Local data
+couchdb-data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store

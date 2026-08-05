@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+
+# Development files
+.vscode
+.idea
+
+# CI/CD
+.github
+
+# Temporary files
+*.tmp
+*.log
+
+# Environment
+.env
+.env.*
+
+# Local data
+couchdb-data/
+
+# Python
+__pycache__/
+*.pyc
