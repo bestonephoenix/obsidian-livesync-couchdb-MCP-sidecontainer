@@ -1,9 +1,8 @@
 name: Docker Beta (GHCR)
 
 # Beta channel: publishes every feature-branch build to GHCR.
-# The release pipeline (docker-publish.yml) is untouched — `latest` on Docker
-# Hub only appears after a real GitHub release. GHCR `beta` cannot collide
-# with it.
+# The release pipeline (docker-publish.yml) is untouched — `latest` on GHCR
+# only appears after a real GitHub release. GHCR `beta` cannot collide with it.
 #
 # Pull:
 #   docker pull ghcr.io/bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer:beta
@@ -16,7 +15,10 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # Hardcoded lowercase on purpose: GHCR rejects uppercase image names, and
+  # ${{ github.repository }} contains uppercase (repo name has "MCP").
+  # Same convention as docker-publish.yml.
+  IMAGE_NAME: bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer
 
 jobs:
   build-and-push-beta:
