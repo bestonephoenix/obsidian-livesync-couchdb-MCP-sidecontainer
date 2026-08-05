@@ -10,13 +10,19 @@ LABEL org.opencontainers.image.authors="bestonephoenix"
 
 WORKDIR /app
 
+# ── git — required to pip-install obsidian-self-mcp from GitHub ─────
+# python:3.11-slim has no git; pip install git+https:// fails without it.
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
 # ── MCP server (obsidian-self-mcp by @suhasvemuri) ────────────────────
-# Not on PyPI — install directly from GitHub
+# Not on PyPI — install directly from GitHub, pinned to a commit SHA
+# (ea77d3b = 2026-02-28) for reproducible builds.
 # https://github.com/suhasvemuri/obsidian-self-mcp
 # NOTE: mcp<2.0.0 pin is REQUIRED — MCP SDK 2.0 moved FastMCP out of
 # mcp.server.fastmcp, which breaks obsidian-self-mcp's imports.
 RUN pip install --no-cache-dir \
-    git+https://github.com/suhasvemuri/obsidian-self-mcp.git \
+    "git+https://github.com/suhasvemuri/obsidian-self-mcp.git@ea77d3b5746b55a19c90d4d6e24e3c694fdfc45e" \
     "mcp[cli]>=1.0.0,<2.0.0" \
     cryptography \
     uvicorn
