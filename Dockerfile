@@ -13,8 +13,11 @@ WORKDIR /app
 # ── MCP server (obsidian-self-mcp by @suhasvemuri) ────────────────────
 # Not on PyPI — install directly from GitHub
 # https://github.com/suhasvemuri/obsidian-self-mcp
+# NOTE: mcp<2.0.0 pin is REQUIRED — MCP SDK 2.0 moved FastMCP out of
+# mcp.server.fastmcp, which breaks obsidian-self-mcp's imports.
 RUN pip install --no-cache-dir \
     git+https://github.com/suhasvemuri/obsidian-self-mcp.git \
+    "mcp[cli]>=1.0.0,<2.0.0" \
     cryptography \
     uvicorn
 

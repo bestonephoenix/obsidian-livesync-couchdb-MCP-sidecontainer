@@ -278,7 +278,9 @@ async def _startup():
         pass
 
     # Build app and wrap with raw ASGI middleware (manual wrap — NOT add_middleware)
-    app = mcp.http_app(transport="streamable-http")
+    # NOTE: This FastMCP version (mcp SDK 1.x, installed via obsidian-self-mcp)
+    # exposes streamable_http_app(), not http_app().
+    app = mcp.streamable_http_app()
     app = _header_middleware(app)
     return app
 
