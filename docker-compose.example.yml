@@ -5,9 +5,9 @@
 #   cp .env.example .env
 #   docker compose up -d
 #
-# The MCP container uses the published GHCR image by default. For local
-# development against this repo's Dockerfile, comment out `image:` and
-# uncomment `build:` below.
+# The MCP container is built from this repo's Dockerfile. Once CI publishing is
+# enabled, you can replace `build: .` with a pinned published image, e.g.:
+#   image: bestonephoenix/obsidian-livesync-mcp:latest
 
 services:
   couchdb:
@@ -17,7 +17,6 @@ services:
     ports:
       - "${COUCHDB_PORT:-5984}:5984"
     environment:
-      - SERVER_DOMAIN=${SERVER_DOMAIN:-localhost}
       - COUCHDB_USER=${COUCHDB_USER:-admin}
       - COUCHDB_PASSWORD=${COUCHDB_PASSWORD:?required}
       - COUCHDB_DATABASE=${COUCHDB_DATABASE:-obsidian}
@@ -25,12 +24,8 @@ services:
       - ${COUCHDB_DATA:-./couchdb-data}:/opt/couchdb/data
 
   mcp:
-    # Published image (default): `latest` tracks the most recent release.
-    # For reproducible deployments, pin a specific version, e.g. `:1.0.0`.
-    image: ghcr.io/bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer:latest
-    # Local development / testing changes in this repo: comment out the
-    # `image:` line above and uncomment `build:` instead.
-    # build: .
+    build: .
+    image: obsidian-livesync-mcp:latest
     container_name: obsidian-mcp
     restart: unless-stopped
     depends_on:

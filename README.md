@@ -46,9 +46,9 @@ This brings up:
 | Service | Container | Port | Purpose |
 |---|---|---|---|
 | `couchdb` | `oleduc/docker-obsidian-livesync-couchdb:latest` | 5984 | LiveSync database (Obsidian clients connect here) |
-| `mcp` | `ghcr.io/bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer:latest` (pulled) | 8000 | MCP endpoint for AI agents |
+| `mcp` | `obsidian-livesync-mcp:latest` (built from this repo) | 8000 | MCP endpoint for AI agents |
 
-> **Building from source instead?** The compose file pulls the published GHCR image by default. To build the MCP container from this repo's `Dockerfile`, comment out the `image:` line and uncomment `build: .` in the compose file.
+> **No Docker Hub image yet?** The compose file builds the MCP container from this repo's `Dockerfile` (`build: .`). Once CI publishing is enabled you can switch to a pinned published image (see [Publishing](#publishing)).
 
 ---
 
@@ -58,7 +58,6 @@ This brings up:
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `SERVER_DOMAIN` | No | `localhost` | Domain for CouchDB setup URI |
 | `COUCHDB_USER` | No | `admin` | CouchDB admin username |
 | `COUCHDB_PASSWORD` | **Yes** | — | CouchDB admin password |
 | `COUCHDB_DATABASE` | No | `obsidian` | Database name for the vault |
@@ -185,13 +184,7 @@ The image is intentionally small: `python:3.11-slim` base, no supervisord, no De
 
 ## Publishing
 
-GitHub Actions (`docker-publish.yml`) builds multi-arch images (`linux/amd64`, `linux/arm64`) on push/PR and publishes to **GitHub Container Registry** when you publish a GitHub release, tagged with semver + `latest`:
-
-```
-ghcr.io/bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer
-```
-
-No Docker Hub token needed — the workflow logs in with the built-in `GITHUB_TOKEN`. After the first release, set the package visibility to **Public** (repo → Packages → package settings) so others can pull it.
+GitHub Actions (`docker-publish.yml`) builds multi-arch images (`linux/amd64`, `linux/arm64`) on push/PR and publishes to Docker Hub on GitHub releases, tagged with semver + `latest`.
 
 ## Migrating from the combined container
 
