@@ -19,9 +19,21 @@ import os
 import sys
 from typing import Optional
 
-# Force host BEFORE FastMCP import
-os.environ["FASTMCP_HOST"] = os.environ.get("MCP_HOST", "0.0.0.0")
-os.environ["FASTMCP_PORT"] = os.environ.get("MCP_PORT", "8000")
+# ── mcp SDK compatibility: FastMCP → MCPServer (mcp SDK 2.0) ───────
+# obsidian-self-mcp imports `from mcp.server.fastmcp import FastMCP`.
+# mcp SDK 2.0 renamed FastMCP → MCPServer and removed mcp.server.fastmcp.
+# Until upstream fixes the import, alias MCPServer as FastMCP — the
+# decorator API is unchanged, so all 13 tool registrations keep working.
+# On mcp SDK 1.x the real module exists and nothing is shimmed.
+try:
+    import mcp.server.fastmcp  # noqa: F401  (present on mcp SDK 1.x)
+except ModuleNotFoundError:
+    import types
+    from mcp.server import MCPServer
+
+    _fastmcp_shim = types.ModuleType("mcp.server.fastmcp")
+    _fastmcp_shim.FastMCP = MCPServer
+    sys.modules["mcp.server.fastmcp"] = _fastmcp_shim
 
 from obsidian_self_mcp.server import mcp, _get_client
 from obsidian_self_mcp.client import ObsidianVaultClient
@@ -272,15 +284,18 @@ async def _startup():
             flush=True,
         )
 
-    try:
-        mcp.settings.transport_security.enable_dns_rebinding_protection = False
-    except AttributeError:
-        pass
+    # DNS rebinding: mcp SDK 2.0 auto-enables protection for localhost hosts,
+    # which BLOCKS container-name access (Host: mcp:8000 → HTTP 421). Pass
+    # transport_security explicitly to disable it — safe inside Docker's
+    # network namespace (same rationale as the old `settings` line on 1.x,
+    # which no longer exists in 2.0).
+    from mcp.server.transport_security import TransportSecuritySettings
 
-    # Build app and wrap with raw ASGI middleware (manual wrap — NOT add_middleware)
-    # NOTE: This FastMCP version (mcp SDK 1.x, installed via obsidian-self-mcp)
-    # exposes streamable_http_app(), not http_app().
-    app = mcp.streamable_http_app()
+    app = mcp.streamable_http_app(
+        transport_security=TransportSecuritySettings(
+            enable_dns_rebinding_protection=False,
+        ),
+    )
     app = _header_middleware(app)
     return app
 

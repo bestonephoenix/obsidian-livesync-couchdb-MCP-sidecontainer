@@ -31,14 +31,13 @@ Built from the combined container [`bestonephoenix/docker-obsidian-livesync-couc
 ## Quick start
 
 ```bash
-git clone https://github.com/bestonephoenix/obsidian-livesync-couchdb-MCP-sidecontainer.git
 cd obsidian-livesync-couchdb-MCP-sidecontainer
 
 cp docker-compose.example.yml docker-compose.yml
 cp .env.example .env
 # Edit .env — set COUCHDB_PASSWORD at minimum
 
-docker compose up -d
+docker compose up -d --build
 ```
 
 This brings up:
@@ -181,6 +180,8 @@ docker build -t obsidian-livesync-mcp .
 ```
 
 The image is intentionally small: `python:3.11-slim` base, no supervisord, no Deno, no CouchDB runtime — just the MCP server and its decryption library.
+
+The image runs on **MCP SDK 2.x** (`MCPServer`). `obsidian-self-mcp` still imports the legacy `mcp.server.fastmcp` module (removed in SDK 2.0), so `mcp_server.py` includes a small compatibility shim that aliases `MCPServer` as `FastMCP` — the decorator API is unchanged, so all 13 tools register identically.
 
 ## Publishing
 
