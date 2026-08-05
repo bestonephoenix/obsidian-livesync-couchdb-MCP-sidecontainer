@@ -48,7 +48,7 @@ This brings up:
 | `couchdb` | `oleduc/docker-obsidian-livesync-couchdb:latest` | 5984 | LiveSync database (Obsidian clients connect here) |
 | `mcp` | `obsidian-livesync-mcp:latest` (built from this repo) | 8000 | MCP endpoint for AI agents |
 
-> **No Docker Hub image yet?** The compose file builds the MCP container from this repo's `Dockerfile` (`build: .`). Once CI publishing is enabled you can switch to a pinned published image (see [Publishing](#publishing)).
+> **No published image yet?** The compose file builds the MCP container from this repo's `Dockerfile` (`build: .`). Once you publish the first release, you can switch to a pinned published image (see [Publishing](#publishing)).
 
 ---
 
@@ -185,7 +185,13 @@ The image is intentionally small: `python:3.11-slim` base, no supervisord, no De
 
 ## Publishing
 
-GitHub Actions (`docker-publish.yml`) builds multi-arch images (`linux/amd64`, `linux/arm64`) on push/PR and publishes to Docker Hub on GitHub releases, tagged with semver + `latest`.
+GitHub Actions (`docker-publish.yml`) builds multi-arch images (`linux/amd64`, `linux/arm64`) on push/PR and publishes to **GitHub Container Registry** when you publish a GitHub release, tagged with semver + `latest`:
+
+```
+ghcr.io/bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer
+```
+
+No Docker Hub token needed — the workflow logs in with the built-in `GITHUB_TOKEN`. After the first release, set the package visibility to **Public** (repo → Packages → package settings) so others can pull it.
 
 ## Migrating from the combined container
 
