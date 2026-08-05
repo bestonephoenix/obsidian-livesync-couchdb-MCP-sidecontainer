@@ -46,9 +46,9 @@ This brings up:
 | Service | Container | Port | Purpose |
 |---|---|---|---|
 | `couchdb` | `oleduc/docker-obsidian-livesync-couchdb:latest` | 5984 | LiveSync database (Obsidian clients connect here) |
-| `mcp` | `obsidian-livesync-mcp:latest` (built from this repo) | 8000 | MCP endpoint for AI agents |
+| `mcp` | `ghcr.io/bestonephoenix/obsidian-livesync-couchdb-mcp-sidecontainer:1.0.0` (pulled) | 8000 | MCP endpoint for AI agents |
 
-> **No published image yet?** The compose file builds the MCP container from this repo's `Dockerfile` (`build: .`). Once you publish the first release, you can switch to a pinned published image (see [Publishing](#publishing)).
+> **Building from source instead?** The compose file pulls the published GHCR image by default. To build the MCP container from this repo's `Dockerfile`, comment out the `image:` line and uncomment `build: .` in the compose file.
 
 ---
 
